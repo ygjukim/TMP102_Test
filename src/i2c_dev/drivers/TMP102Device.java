@@ -172,7 +172,16 @@ public class TMP102Device extends I2CRPi {
     }
     
     public boolean isAlert() {
-        return ((read(CONFIG_REG) & AL_MASK) != 0) ? true : false;
+        int config = read(CONFIG_REG);
+        boolean alert = false;
+        
+        if ((config & POL_MASK) != 0) {
+            alert = (read(CONFIG_REG) & AL_MASK) != 0 ? true : false;
+        }
+        else {
+            alert = (read(CONFIG_REG) & AL_MASK) == 0 ? true : false;
+        }
+        return alert;
     }
     
     private void setConfigBit(int mask, boolean mode) {
